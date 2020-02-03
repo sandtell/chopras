@@ -5,6 +5,7 @@ import { AddorderPage } from '../addorder/addorder.page';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { LoaderService } from '../services/loader/loader.service';
 import { ConfigService } from '../services/config/config.service';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-ticket',
@@ -13,19 +14,22 @@ import { ConfigService } from '../services/config/config.service';
 })
 export class TicketPage implements OnInit {
 
+  public tID;
   public ticketDetailsJson;
   validations_form: FormGroup;
   public baseImg;
+  // public orderJSON;
+  public isHideOrder:boolean = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private loadingCtrl: LoaderService,
     private config: ConfigService,
     private formBuilder: FormBuilder,
-    private camera: Camera
+    private camera: Camera,
+    public modalController: ModalController
   ) { }
 
-  ngOnInit() {
-
+  ngOnInit() {    
     var acc = document.getElementsByClassName('accordion');
     var i;
 
@@ -40,9 +44,6 @@ export class TicketPage implements OnInit {
         }
       });
     }
-
-
-
 
     this.validations_form = this.formBuilder.group({
       customerName: new FormControl('', Validators.compose([
@@ -60,15 +61,27 @@ export class TicketPage implements OnInit {
         Validators.required,
         Validators.pattern('^[0-9]*$')
       ])),
-      order: new FormControl(''),
-      paymentTerm: new FormControl(''),
-      accommodateby : new FormControl(''),
+      
+      product: new FormControl(''),
+      quantity: new FormControl(''),
+      discount : new FormControl(''),
+      ticketID : new FormControl(''),
+
+      paymentMode: new FormControl('', Validators.compose([
+        Validators.required
+      ])),
+      paymentTerm: new FormControl('', Validators.compose([
+        Validators.required
+      ])),
+      accompaniedBy: new FormControl('', Validators.compose([
+        Validators.required
+      ])),
     });
 
 
 
-   let ticketID = this.activatedRoute.snapshot.paramMap.get('ticketID');
-   this.getTicketDataByID(ticketID);
+    this.tID = this.activatedRoute.snapshot.paramMap.get('ticketID');
+   this.getTicketDataByID(this.tID);
   }
 
   getTicketDataByID(tID){
@@ -110,20 +123,52 @@ export class TicketPage implements OnInit {
       { type: 'minlength', message: 'Mobile No must be at least 10' },
       { type: 'maxlength', message: 'Mobile No cannot be more than 10' },
       { type: 'pattern', message: 'Chapter are not allowed' }
+    ],
+    paymentMode : [
+      { type: 'required', message: 'Payment Mode is required.' },
+    ],
+    paymentTerm : [
+      { type: 'required', message: 'Payment Term is required.' },
+    ],
+    accompaniedBy : [
+      { type: 'required', message: 'Accompanied By is required.' },
     ]
-
   };
 
 
   async onSubmit(values) {
     console.log(values);
+    // console.log(tempArr);
   }
 
+
+ async openModal() {
+    const modal = await this.modalController.create({
+      component: AddorderPage
+    });
+
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned !== null) {
+        this.isHideOrder = true;
+
+        this.validations_form.controls['product'].setValue(dataReturned.data.product);
+        this.validations_form.controls['quantity'].setValue(dataReturned.data.quantity);
+        this.validations_form.controls['discount'].setValue(dataReturned.data.discount);
+        this.validations_form.controls['ticketID'].setValue(this.tID);
+
+        // this.orderJSON = dataReturned.data;
+        console.log(dataReturned.data);
+        //alert('Modal Sent Data :'+ dataReturned);
+      }
+    });
+
+    return await modal.present();
+  }
 
   openCameraFn() {
     const options: CameraOptions = {
       quality: 100,
-      destinationType: this.camera.DestinationType.FILE_URI,
+      destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     }
@@ -135,6 +180,7 @@ export class TicketPage implements OnInit {
      this.baseImg = imageData;
      alert(base64Image);
     }, (err) => {
+      alert(JSON.stringify(err));
      // Handle error
     });
   }

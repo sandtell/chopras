@@ -1,12 +1,12 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Add Order</ion-title>
-    <ion-buttons slot="end">
-      <ion-back-button
-          text="CLOSE"
-          icon="">
-      </ion-back-button>
+     <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
     </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -19,9 +19,9 @@
         <ion-list>
           <ion-item>
             <ion-label position="floating">Product</ion-label>
-        
+
             <ion-select value="product" okText="Okay" cancelText="Dismiss" formControlName="product">
-              <ion-select-option *ngFor="let p of productJson" value="{{p.pid}}">{{p.pname}}</ion-select-option>
+              <ion-select-option *ngFor="let p of productJson" value="{{p.pname}}">{{p.pname}}</ion-select-option>
             </ion-select>
           </ion-item>
           <div class="validation-errors">
@@ -61,7 +61,7 @@
             </ng-container>
           </div>
 
-        
+
         </ion-list>
 
 

@@ -69,15 +69,7 @@
           </ng-container>
         </div>
 
-        <ion-item>
-          <ion-label position="inline">Payment Term : </ion-label>
-          <ion-input type="text" formControlName="paymentTerm"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="inline">Accommodate By : </ion-label>
-          <ion-input type="text" formControlName="accommodateby"></ion-input>
-        </ion-item>
+      
          
 
         <!-- <ion-item>
@@ -87,15 +79,39 @@
 
 
         <div class="accordion">
-          Order<span class="orderSpanClass">Order Information</span>
+          Order<span class="orderSpanClass">
+            <!-- Order Information -->        
+            <div *ngIf="isHideOrder">
+              <!-- <strong>{{orderJSON | json}}</strong> -->        
+              <ion-item>
+                <ion-label position="inline">Product Name : </ion-label>
+                <ion-input type="text" formControlName="product" ></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="inline">Quantity : </ion-label>
+                <ion-input type="text" formControlName="quantity" ></ion-input>
+              </ion-item>
+        
+              <ion-item>
+                <ion-label position="inline">Discount : </ion-label>
+                <ion-input type="text" formControlName="discount" ></ion-input>
+              </ion-item>
+
+              <ion-input type="hidden" formControlName="ticketID" ></ion-input>
+
+            </div>
+        
+          </span>
         </div>
         <div class="panel ion-text-center">
-          <ion-button color="success" shape="round" routerLink="/addorder" routerDirection="forward" >Order</ion-button>
+          <!-- <ion-button color="success" shape="round" routerLink="/addorder" routerDirection="forward" >Order</ion-button> -->
+          <ion-button color="success" shape="round" (click)="openModal()" >Order</ion-button>
         </div>
 
 
 
-        <div class="accordion">Payment <span class="paymentSpanClass">Payment Information</span></div>
+        <!-- <div class="accordion">Payment <span class="paymentSpanClass">Payment Information</span></div>
         <div class="panel ion-text-center">
           Payment Information
         </div>
@@ -103,7 +119,53 @@
         <div class="accordion">Replacement <span class="paymentSpanClass">Replace Information</span></div>
         <div class="panel ion-text-center">
           Replacement Information
+        </div> -->
+
+        <ion-item>
+          <ion-label position="floating">Payment Mode</ion-label>
+      
+          <ion-select value="Payment Method" okText="Okay" cancelText="Dismiss" formControlName="paymentMode">
+            <ion-select-option value="Cash">Cash</ion-select-option>
+            <ion-select-option value="Cheque">Cheque</ion-select-option>
+            <ion-select-option value="RTGS">RTGS</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <div class="validation-errors">
+          <ng-container *ngFor="let validation of validation_messages.paymentMode">
+            <div class="error-message"
+              *ngIf="validations_form.get('paymentMode').hasError(validation.type) && (validations_form.get('paymentMode').dirty || validations_form.get('paymentMode').touched)">
+              <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+            </div>
+          </ng-container>
         </div>
+
+        <ion-item>
+          <ion-label position="inline">Payment Term : </ion-label>
+          <ion-input type="text" formControlName="paymentTerm"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <ng-container *ngFor="let validation of validation_messages.paymentTerm">
+            <div class="error-message"
+              *ngIf="validations_form.get('paymentTerm').hasError(validation.type) && (validations_form.get('paymentTerm').dirty || validations_form.get('paymentTerm').touched)">
+              <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+            </div>
+          </ng-container>
+        </div>
+
+        <ion-item>
+          <ion-label position="inline">Accompanied By : </ion-label>
+          <ion-input type="text" formControlName="accompaniedBy"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <ng-container *ngFor="let validation of validation_messages.paymentTerm">
+            <div class="error-message"
+              *ngIf="validations_form.get('accompaniedBy').hasError(validation.type) && (validations_form.get('accompaniedBy').dirty || validations_form.get('accompaniedBy').touched)">
+              <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+            </div>
+          </ng-container>
+        </div>
+
 
         <div class="accordion">Photo</div>
         <div class="panel ion-text-center">
@@ -112,16 +174,12 @@
           </ion-button>        
         </div>
 
+        <div text-center>
+          <ion-button expand="full" type="submit" [disabled]="!validations_form.valid">Submit</ion-button>
+        </div>
 
       </ion-card-content>
     </ion-card>
-
-
-
-    <div text-center class="ion-padding-top">
-      <ion-button expand="full" type="submit" [disabled]="!validations_form.valid">Submit</ion-button>
-    </div>
-
   </form>
 
 </ion-content>

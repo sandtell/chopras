@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { LoaderService } from '../services/loader/loader.service';
 import { ConfigService } from '../services/config/config.service';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-addorder',
@@ -18,6 +19,7 @@ export class AddorderPage implements OnInit {
     private loadingCtrl: LoaderService,
     private config: ConfigService,
     private formBuilder: FormBuilder,
+    private modalController: ModalController
   ) { }
 
   ngOnInit() {
@@ -45,7 +47,7 @@ export class AddorderPage implements OnInit {
       { type: 'required', message: 'Quantity is required.' },
     ],
     discount: [
-      { type: 'required', message: 'Quantity is required.' },
+      { type: 'required', message: 'Discount is required.' },
     ],
   };
 
@@ -68,8 +70,13 @@ export class AddorderPage implements OnInit {
   }
 
 
-  onSubmit(values) {
+  async closeModal() {
+    await this.modalController.dismiss();
+  }
 
+ async onSubmit(values) {
+    // console.log(values);
+    await this.modalController.dismiss(values);
   }
 
 }
