@@ -91,9 +91,23 @@ export class TicketPage implements OnInit {
         Validators.pattern('^[0-9]*$')
       ])),
 
-      product: new FormControl(''),
-      quantity: new FormControl(''),
-      discount: new FormControl(''),
+      product: new FormControl('',
+        Validators.compose([
+          Validators.required,
+      ])
+      ),
+      quantity: new FormControl('',
+        Validators.compose([
+          Validators.required,
+          Validators.pattern('^[0-9]*$')
+        ])        
+      ),
+      discount: new FormControl('',
+        Validators.compose([
+        Validators.required,
+        Validators.pattern('^[0-9]*$')
+      ])
+      ),
       ticketID: new FormControl(''),
       latitude: new FormControl(''),
       longitude: new FormControl(''),
@@ -164,7 +178,15 @@ export class TicketPage implements OnInit {
     ],
     accompaniedBy: [
       { type: 'required', message: 'Accompanied By is required.' },
-    ]
+    ],
+    quantity: [
+      { type: 'required', message: 'Quantity is required.' },
+      { type: 'pattern', message: 'Chapter are not allowed' }
+    ],
+    discount: [
+      { type: 'required', message: 'Discount is required.' },
+      { type: 'pattern', message: 'Chapter are not allowed' }
+    ],
   };
 
 

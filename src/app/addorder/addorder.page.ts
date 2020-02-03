@@ -30,9 +30,11 @@ export class AddorderPage implements OnInit {
       ])),
       quantity: new FormControl('', Validators.compose([
         Validators.required,
+        Validators.pattern('^[0-9]*$')
       ])),
       discount: new FormControl('', Validators.compose([
         Validators.required,
+        Validators.pattern('^[0-9]*$')
       ])),
     });
 
@@ -45,9 +47,11 @@ export class AddorderPage implements OnInit {
     ],
     quantity: [
       { type: 'required', message: 'Quantity is required.' },
+      { type: 'pattern', message: 'Chapter are not allowed' }
     ],
     discount: [
       { type: 'required', message: 'Discount is required.' },
+      { type: 'pattern', message: 'Chapter are not allowed' }
     ],
   };
 
