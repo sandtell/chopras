@@ -14,10 +14,13 @@ import { Network } from '@ionic-native/network/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
-import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { AuthGuardService } from './services/guard/auth-guard.service';
 import { AuthenticationService } from './services/auth/authentication.service';
 import { Camera } from '@ionic-native/camera/ngx';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { AddorderPageModule } from './addorder/addorder.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,7 +31,8 @@ import { Camera } from '@ionic-native/camera/ngx';
     IonicStorageModule.forRoot(),
     IonicModule.forRoot(),
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AddorderPageModule
   ],
   providers: [
     StatusBar,
@@ -39,6 +43,9 @@ import { Camera } from '@ionic-native/camera/ngx';
     AuthGuardService,
     AuthenticationService,
     AndroidPermissions,
+    Geolocation,
+    AndroidPermissions,
+    LocationAccuracy,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

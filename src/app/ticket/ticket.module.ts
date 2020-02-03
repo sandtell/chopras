@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { TicketPageRoutingModule } from './ticket-routing.module';
-import { TicketPage } from './ticket.page';
-import { AddorderPage } from '../addorder/addorder.page';
+import { TicketPage } from './ticket.page'; 
 
 @NgModule({
   imports: [
@@ -12,12 +11,10 @@ import { AddorderPage } from '../addorder/addorder.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    TicketPageRoutingModule
+    TicketPageRoutingModule, 
   ],
   declarations: [
-    TicketPage,
-    AddorderPage
-  ],
-  entryComponents: [AddorderPage]
+    TicketPage, 
+  ]
 })
 export class TicketPageModule {}

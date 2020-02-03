@@ -6,6 +6,9 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { LoaderService } from '../services/loader/loader.service';
 import { ConfigService } from '../services/config/config.service';
 import { ModalController } from '@ionic/angular';
+import { Geolocation, Geoposition, GeolocationOptions } from '@ionic-native/geolocation/ngx';
+import { HttpClient } from '@angular/common/http';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ticket',
@@ -18,23 +21,49 @@ export class TicketPage implements OnInit {
   public ticketDetailsJson;
   validations_form: FormGroup;
   public baseImg;
+  public hideImg :boolean = false;
+
+  private options: GeolocationOptions;
+
   // public orderJSON;
-  public isHideOrder:boolean = false;
+  public isHideOrder: boolean = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private loadingCtrl: LoaderService,
     private config: ConfigService,
     private formBuilder: FormBuilder,
     private camera: Camera,
-    public modalController: ModalController
+    public modalController: ModalController,
+    private geolocation: Geolocation,
+    private http: HttpClient,
+    public domSanitizer: DomSanitizer
   ) { }
 
-  ngOnInit() {    
+  ngOnInit() {
+
+
+    this.options = {
+      enableHighAccuracy: true
+    };
+    this.geolocation.getCurrentPosition(this.options).then((pos: Geoposition) => {
+      console.log(pos);
+
+
+      localStorage.setItem('latitude', pos.coords.latitude.toString());
+      localStorage.setItem('longitude', pos.coords.longitude.toString());
+
+      // this.currentPos = pos;
+      // this.userLat = pos.coords.latitude;
+      // this.userLong = pos.coords.longitude;
+    }, (err: PositionError) => {
+      console.log('error: ' + err.message);
+    });
+
     var acc = document.getElementsByClassName('accordion');
     var i;
 
     for (i = 0; i < acc.length; i++) {
-      acc[i].addEventListener('click', function() {
+      acc[i].addEventListener('click', function () {
         this.classList.toggle('active');
         var panel = this.nextElementSibling;
         if (panel.style.maxHeight) {
@@ -61,11 +90,14 @@ export class TicketPage implements OnInit {
         Validators.required,
         Validators.pattern('^[0-9]*$')
       ])),
-      
+
       product: new FormControl(''),
       quantity: new FormControl(''),
-      discount : new FormControl(''),
-      ticketID : new FormControl(''),
+      discount: new FormControl(''),
+      ticketID: new FormControl(''),
+      latitude: new FormControl(''),
+      longitude: new FormControl(''),
+      images: new FormControl(''),
 
       paymentMode: new FormControl('', Validators.compose([
         Validators.required
@@ -81,11 +113,11 @@ export class TicketPage implements OnInit {
 
 
     this.tID = this.activatedRoute.snapshot.paramMap.get('ticketID');
-   this.getTicketDataByID(this.tID);
+    this.getTicketDataByID(this.tID);
   }
 
-  getTicketDataByID(tID){
-    try{
+  getTicketDataByID(tID) {
+    try {
       this.loadingCtrl.present('Please Wait...', 'dots');
       const url = this.config.domainURL + `ticketdetails.php?id=${tID}`;
       this.config.getData(url).subscribe((data) => {
@@ -98,7 +130,7 @@ export class TicketPage implements OnInit {
         this.validations_form.controls['contactNo'].setValue(data[0].contact);
 
         this.loadingCtrl.dismiss();
-      },error => {
+      }, error => {
         console.log(error);
         this.loadingCtrl.dismiss();
       });
@@ -115,22 +147,22 @@ export class TicketPage implements OnInit {
     status: [
       { type: 'required', message: 'Status is required.' },
     ],
-    address : [
+    address: [
       { type: 'required', message: 'Address is required.' },
     ],
-    contactNo :[
+    contactNo: [
       { type: 'required', message: 'Contact No number is required.' },
       { type: 'minlength', message: 'Mobile No must be at least 10' },
       { type: 'maxlength', message: 'Mobile No cannot be more than 10' },
       { type: 'pattern', message: 'Chapter are not allowed' }
     ],
-    paymentMode : [
+    paymentMode: [
       { type: 'required', message: 'Payment Mode is required.' },
     ],
-    paymentTerm : [
+    paymentTerm: [
       { type: 'required', message: 'Payment Term is required.' },
     ],
-    accompaniedBy : [
+    accompaniedBy: [
       { type: 'required', message: 'Accompanied By is required.' },
     ]
   };
@@ -138,11 +170,29 @@ export class TicketPage implements OnInit {
 
   async onSubmit(values) {
     console.log(values);
-    // console.log(tempArr);
+    
+      // alert(JSON.stringify(values));
+    // this.loadingCtrl.present('Uploading Data...', 'dots');
+    // let data: any;
+    // const url = this.config.domainURL + `ticketupdate.php`;
+    // data = this.http.post(url, values);
+    // data.subscribe(result => {
+    //   console.log(result);
+    //   this.loadingCtrl.dismiss();
+    //   setTimeout(() => {
+    //     this.loadingCtrl.dismiss();
+    //   }, 5000);
+    // }, error => {
+    //   // alert(JSON.stringify(error));
+    //   console.log(error);
+    //   this.loadingCtrl.dismiss();
+    // });
+
+
   }
 
 
- async openModal() {
+  async openModal() {
     const modal = await this.modalController.create({
       component: AddorderPage
     });
@@ -154,7 +204,10 @@ export class TicketPage implements OnInit {
         this.validations_form.controls['product'].setValue(dataReturned.data.product);
         this.validations_form.controls['quantity'].setValue(dataReturned.data.quantity);
         this.validations_form.controls['discount'].setValue(dataReturned.data.discount);
+
         this.validations_form.controls['ticketID'].setValue(this.tID);
+        this.validations_form.controls['latitude'].setValue(localStorage.getItem('latitude'));
+        this.validations_form.controls['longitude'].setValue(localStorage.getItem('longitude'));
 
         // this.orderJSON = dataReturned.data;
         console.log(dataReturned.data);
@@ -172,16 +225,20 @@ export class TicketPage implements OnInit {
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     }
-    
+
     this.camera.getPicture(options).then((imageData) => {
-     // imageData is either a base64 encoded string or a file URI
-     // If it's base64 (DATA_URL):
-     let base64Image = 'data:image/jpeg;base64,' + imageData;
-     this.baseImg = imageData;
-     alert(base64Image);
+      // imageData is either a base64 encoded string or a file URI
+      // If it's base64 (DATA_URL):
+      let base64Image = 'data:image/jpeg;base64,' + imageData;
+
+      this.hideImg = true;
+
+      this.baseImg =  this.domSanitizer.bypassSecurityTrustUrl(base64Image);
+      this.validations_form.controls['images'].setValue(base64Image);
+      // alert(base64Image);
     }, (err) => {
       alert(JSON.stringify(err));
-     // Handle error
+      // Handle error
     });
   }
 
