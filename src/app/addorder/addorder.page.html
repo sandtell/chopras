@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Add Order</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button
+          text="CLOSE"
+          icon="">
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <form [formGroup]="validations_form" (ngSubmit)="onSubmit(validations_form.value)">
+    <ion-card>
+      <ion-card-content>
+
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Product</ion-label>
+        
+            <ion-select value="product" okText="Okay" cancelText="Dismiss" formControlName="product">
+              <ion-select-option *ngFor="let p of productJson" value="{{p.pid}}">{{p.pname}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <div class="validation-errors">
+            <ng-container *ngFor="let validation of validation_messages.product">
+              <div class="error-message"
+                *ngIf="validations_form.get('product').hasError(validation.type) && (validations_form.get('product').dirty || validations_form.get('product').touched)">
+                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+              </div>
+            </ng-container>
+          </div>
+
+          <ion-item>
+            <ion-label position="stacked" color="primary">Quantity
+            </ion-label>
+            <ion-input type="text" formControlName="quantity"></ion-input>
+          </ion-item>
+          <div class="validation-errors">
+            <ng-container *ngFor="let validation of validation_messages.quantity">
+              <div class="error-message"
+                *ngIf="validations_form.get('quantity').hasError(validation.type) && (validations_form.get('quantity').dirty || validations_form.get('quantity').touched)">
+                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+              </div>
+            </ng-container>
+          </div>
+
+          <ion-item>
+            <ion-label position="stacked" color="primary">Discount
+            </ion-label>
+            <ion-input type="text" formControlName="discount"></ion-input>
+          </ion-item>
+          <div class="validation-errors">
+            <ng-container *ngFor="let validation of validation_messages.discount">
+              <div class="error-message"
+                *ngIf="validations_form.get('discount').hasError(validation.type) && (validations_form.get('discount').dirty || validations_form.get('discount').touched)">
+                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+              </div>
+            </ng-container>
+          </div>
+
+        
+        </ion-list>
+
+
+
+        <div text-center class="ion-padding-top">
+          <ion-button color="success" shape="round" type="submit" [disabled]="!validations_form.valid">Submit
+          </ion-button>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+  </form>
+</ion-content>

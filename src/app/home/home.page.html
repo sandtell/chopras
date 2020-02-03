@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar color="primary" >
+    <ion-title>
+      Ticket List
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button routerLink="/settings" routerDirection="forward"  >
+        <ion-icon name="cog"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list lines="full">
+      <ion-item *ngFor="let t of ticketJSON" 
+      [ngClass]="{
+        'active-menu1':t.status === 'Open',
+        'active-menu2':t.status === 'pending',
+        'active-menu':t.status === 'expired'
+      }"  routerLink="/ticket/{{t.id}}" routerDirection="forward"  >
+      <ion-label slot="start">
+        {{t.customerName}}
+      </ion-label>
+      <ion-label slot="end">
+          #{{t.id}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

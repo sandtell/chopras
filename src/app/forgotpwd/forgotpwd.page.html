@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="text-center ion-padding">
+    <h4 class="ion-padding"><b>Forgot Password</b></h4>
+  </div>
+
+  <form [formGroup]="validations_form" (ngSubmit)="onSubmit(validations_form.value)">
+    <ion-card>
+      <ion-card-content>
+
+        <ion-item>
+          <ion-label position="floating" >Email
+          </ion-label>
+          <ion-input type="text" formControlName="email"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <ng-container *ngFor="let validation of errorMSG.validation_messages.email">
+            <div class="error-message"
+              *ngIf="validations_form.get('email').hasError(validation.type) && (validations_form.get('email').dirty || validations_form.get('email').touched)">
+              <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+            </div>
+          </ng-container>
+        </div>
+
+
+
+        <div text-center class="ion-padding">
+          <button type="submit" [disabled]="!validations_form.valid" class="btn btn-danger btn-round outlineCSS" >Send</button>
+        </div>
+
+        <div text-center>
+          <ion-text routerLink="/login" routerDirection="forward" color="danger">Back to Login</ion-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </form>
+
+</ion-content>
