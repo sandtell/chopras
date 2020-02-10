@@ -36,10 +36,11 @@ const routes: Routes = [
   {
     path: 'addorder',
     loadChildren: () => import('./addorder/addorder.module').then( m => m.AddorderPageModule)
-  },  {
+  },
+  {
     path: 'settings',
     loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
-  }
+  } 
 
 
 

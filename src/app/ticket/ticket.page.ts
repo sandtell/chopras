@@ -22,7 +22,7 @@ export class TicketPage implements OnInit {
   validations_form: FormGroup;
   public baseImg;
   public hideImg :boolean = false;
-
+  public orderJSON = [];
   private options: GeolocationOptions;
 
   // public orderJSON;
@@ -91,27 +91,29 @@ export class TicketPage implements OnInit {
         Validators.pattern('^[0-9]*$')
       ])),
 
-      product: new FormControl('',
-        Validators.compose([
-          Validators.required,
-      ])
-      ),
-      quantity: new FormControl('',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern('^[0-9]*$')
-        ])        
-      ),
-      discount: new FormControl('',
-        Validators.compose([
-        Validators.required,
-        Validators.pattern('^[0-9]*$')
-      ])
-      ),
+      // product: new FormControl('',
+      //   Validators.compose([
+      //     Validators.required,
+      // ])
+      // ),
+      // quantity: new FormControl('',
+      //   Validators.compose([
+      //     Validators.required,
+      //     Validators.pattern('^[0-9]*$')
+      //   ])        
+      // ),
+      // discount: new FormControl('',
+      //   Validators.compose([
+      //   Validators.required,
+      //   Validators.pattern('^[0-9]*$')
+      // ])
+      // ),
       ticketID: new FormControl(''),
       latitude: new FormControl(''),
       longitude: new FormControl(''),
       images: new FormControl(''),
+
+      orderData: new FormControl(''),
 
       paymentMode: new FormControl('', Validators.compose([
         Validators.required
@@ -120,6 +122,9 @@ export class TicketPage implements OnInit {
         Validators.required
       ])),
       accompaniedBy: new FormControl('', Validators.compose([
+        Validators.required
+      ])),
+      replacement: new FormControl('', Validators.compose([
         Validators.required
       ])),
     });
@@ -187,11 +192,16 @@ export class TicketPage implements OnInit {
       { type: 'required', message: 'Discount is required.' },
       { type: 'pattern', message: 'Chapter are not allowed' }
     ],
+    replacement : [
+      { type: 'required', message: 'Replacement is required.' },
+    ]
   };
 
 
   async onSubmit(values) {
     console.log(values);
+
+    console.log(JSON.stringify(values));
     
       // alert(JSON.stringify(values));
     // this.loadingCtrl.present('Uploading Data...', 'dots');
@@ -223,15 +233,19 @@ export class TicketPage implements OnInit {
       if (dataReturned !== null) {
         this.isHideOrder = true;
 
-        this.validations_form.controls['product'].setValue(dataReturned.data.product);
-        this.validations_form.controls['quantity'].setValue(dataReturned.data.quantity);
-        this.validations_form.controls['discount'].setValue(dataReturned.data.discount);
+        // console.log(dataReturned.data);
+
+        this.validations_form.controls['orderData'].setValue(dataReturned.data);
+
+        // this.validations_form.controls['product'].setValue(dataReturned.data.product);
+        // this.validations_form.controls['quantity'].setValue(dataReturned.data.quantity);
+        // this.validations_form.controls['discount'].setValue(dataReturned.data.discount);
 
         this.validations_form.controls['ticketID'].setValue(this.tID);
         this.validations_form.controls['latitude'].setValue(localStorage.getItem('latitude'));
         this.validations_form.controls['longitude'].setValue(localStorage.getItem('longitude'));
 
-        // this.orderJSON = dataReturned.data;
+        this.orderJSON = dataReturned.data;
         console.log(dataReturned.data);
         //alert('Modal Sent Data :'+ dataReturned);
       }

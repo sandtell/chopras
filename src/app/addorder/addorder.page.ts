@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { LoaderService } from '../services/loader/loader.service';
 import { ConfigService } from '../services/config/config.service';
+import { AlertController } from '@ionic/angular';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -12,33 +12,83 @@ import { ModalController } from '@ionic/angular';
 })
 export class AddorderPage implements OnInit {
 
-  validations_form: FormGroup;
+  public usersForm: FormGroup;
+  public isBtnDisable: boolean = true;
   public productJson:any;
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private fb: FormBuilder,
     private loadingCtrl: LoaderService,
     private config: ConfigService,
-    private formBuilder: FormBuilder,
+    private alertCtrl: AlertController,
     private modalController: ModalController
   ) { }
 
   ngOnInit() {
+    this.usersForm = this.fb.group({
+      // date: this.fb.control(new Date()),
+      users: this.fb.array([
+        this.fb.group({
+          product: ['', Validators.required],
+          quantity: ['', Validators.required],
+          discount: ['', Validators.required]
+        }),
+      ])
+    });
+    this.getProducts();
+  }
 
-    this.validations_form = this.formBuilder.group({
-      product: new FormControl('', Validators.compose([
-        Validators.required,
-      ])),
-      quantity: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.pattern('^[0-9]*$')
-      ])),
-      discount: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.pattern('^[0-9]*$')
-      ])),
+  removeFormControl(i) {
+    console.log(i);
+    if (i != 0) {
+      let usersArray = this.usersForm.controls.users as FormArray;
+      usersArray.removeAt(i);
+    }
+    
+  }
+
+  addFormControl() {
+    let usersArray = this.usersForm.controls.users as FormArray;
+    let arraylen = usersArray.length;
+
+    let newUsergroup: FormGroup = this.fb.group({
+      product: ['', Validators.required],
+      quantity: ['', Validators.required],
+      discount: ['', Validators.required]
+    })
+
+    usersArray.insert(arraylen, newUsergroup);
+
+    // console.log('74' ,this.usersForm.controls.users.value);
+
+  }
+
+  async  onSubmit() {
+
+    // console.log(this.usersForm.controls.users.value);
+
+    for(let z = 0;z <=this.usersForm.controls.users.value.length -1 ;z++ ) {
+      // console.log(z);
+      if(this.usersForm.controls.users.value[z].product != "" && this.usersForm.controls.users.value[z].quantity != "" && this.usersForm.controls.users.value[z].discount != "") {
+        // console.log(this.usersForm.controls.users.value);
+        await this.modalController.dismiss(this.usersForm.controls.users.value);
+      }else {
+        this.alertFn(`All fields are mandatory in  ${z+1} Forms`);
+      }
+    }
+
+
+    
+    
+  }
+
+  async alertFn(msg: string) {
+   const alert = await this.alertCtrl.create({
+      header: 'Alert',
+      message: msg,
+      buttons: ['OK']
     });
 
-    this.getProducts();
+    await alert.present();
   }
 
   validation_messages = {
@@ -54,6 +104,7 @@ export class AddorderPage implements OnInit {
       { type: 'pattern', message: 'Chapter are not allowed' }
     ],
   };
+
 
   getProducts() { 
     try{
@@ -77,10 +128,6 @@ export class AddorderPage implements OnInit {
   async closeModal() {
     await this.modalController.dismiss();
   }
-
- async onSubmit(values) {
-    // console.log(values);
-    await this.modalController.dismiss(values);
-  }
+ 
 
 }

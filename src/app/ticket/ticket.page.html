@@ -80,34 +80,39 @@
 
         <div class="accordion">
           Order<span class="orderSpanClass">
-            <!-- Order Information -->        
+            <!-- Order Information -->
             <div *ngIf="isHideOrder">
-              <!-- <strong>{{orderJSON | json}}</strong> -->        
-              <ion-item>
-                <ion-label position="inline">Product Name : </ion-label>
-                <ion-input type="text" formControlName="product" ></ion-input>
-              </ion-item>
 
-              <ion-item>
-                <ion-label position="inline">Quantity : </ion-label>
-                <ion-input type="text" formControlName="quantity" ></ion-input>
-              </ion-item>
-        
-              <ion-item>
-                <ion-label position="inline">Discount : </ion-label>
-                <ion-input type="text" formControlName="discount" ></ion-input>
-              </ion-item>
+              <ion-input type="hidden" formControlName="orderData"></ion-input>
+              <ion-input type="hidden" formControlName="ticketID"></ion-input>
+              <ion-input type="hidden" formControlName="latitude"></ion-input>
+              <ion-input type="hidden" formControlName="longitude"></ion-input>
 
-              <ion-input type="hidden" formControlName="ticketID" ></ion-input>
-              <ion-input type="hidden" formControlName="latitude" ></ion-input>
-              <ion-input type="hidden" formControlName="longitude" ></ion-input>
+              <div *ngFor="let o of orderJSON">
+                <!-- <strong>{{orderJSON | json}}</strong> -->
+                <ion-item>
+                  <ion-label position="inline">Product Name : </ion-label>
+                  {{o.product}}
+                </ion-item>
+            
+                <ion-item>
+                  <ion-label position="inline">Quantity : </ion-label>
+                  {{o.quantity}}
+                </ion-item>
+            
+                <ion-item>
+                  <ion-label position="inline">Discount : </ion-label>
+                  {{o.discount}}
+                </ion-item>
+            
 
-            </div>
-        
+            
+              </div>
+          </div>
           </span>
         </div>
         <div class="panel ion-text-center">
-          <!-- <ion-button color="success" shape="round" routerLink="/addorder" routerDirection="forward" >Order</ion-button> -->
+          <!-- <ion-button color="success" shape="round" routerLink="/dynamicform" routerDirection="forward" >Order</ion-button> -->
           <ion-button color="success" shape="round" (click)="openModal()" >Order</ion-button>
         </div>
 
@@ -163,6 +168,19 @@
           <ng-container *ngFor="let validation of validation_messages.paymentTerm">
             <div class="error-message"
               *ngIf="validations_form.get('accompaniedBy').hasError(validation.type) && (validations_form.get('accompaniedBy').dirty || validations_form.get('accompaniedBy').touched)">
+              <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+            </div>
+          </ng-container>
+        </div>
+
+        <ion-item>
+          <ion-label position="inline">Replacement  : </ion-label>
+          <ion-input type="text" formControlName="replacement"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <ng-container *ngFor="let validation of validation_messages.replacement">
+            <div class="error-message"
+              *ngIf="validations_form.get('replacement').hasError(validation.type) && (validations_form.get('replacement').dirty || validations_form.get('replacement').touched)">
               <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
             </div>
           </ng-container>
