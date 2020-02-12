@@ -49,12 +49,14 @@ export class AppComponent {
     this.initializeApp();
   }
 
-  ionViewWillEnter() {
-    this.menuCtrl.enable(false);
-  }
+  // ionViewWillEnter() {
+  //   // alert('ask')
+  //   this.menuCtrl.enable(false);
+  // }
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.menuCtrl.enable(false);          //disable sidemenu
       this.statusBar.styleLightContent();
       this.splashScreen.hide();
       this.checkGPSPermission();

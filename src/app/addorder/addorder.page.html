@@ -32,13 +32,19 @@
               <ion-item>
                 <ion-label position="stacked" color="primary">Quantity
                 </ion-label>
-                <ion-input type="text" formControlName="quantity"></ion-input>
+                <ion-input type="number" formControlName="quantity"></ion-input>
               </ion-item>
 
               <ion-item>
                 <ion-label position="stacked" color="primary">Discount
                 </ion-label>
-                <ion-input type="text" formControlName="discount"></ion-input>
+                <ion-input type="number" formControlName="discount"></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="stacked" color="primary">Product Cost
+                </ion-label>
+                <ion-input type="number" formControlName="pcost"></ion-input>
               </ion-item>
               
               <div class="ion-text-center ion-padding-top " *ngIf="i!=0" >

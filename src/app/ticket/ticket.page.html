@@ -89,24 +89,28 @@
               <ion-input type="hidden" formControlName="longitude"></ion-input>
 
               <div *ngFor="let o of orderJSON">
-                <!-- <strong>{{orderJSON | json}}</strong> -->
-                <ion-item>
-                  <ion-label position="inline">Product Name : </ion-label>
-                  {{o.product}}
-                </ion-item>
-            
-                <ion-item>
-                  <ion-label position="inline">Quantity : </ion-label>
-                  {{o.quantity}}
-                </ion-item>
-            
-                <ion-item>
-                  <ion-label position="inline">Discount : </ion-label>
-                  {{o.discount}}
-                </ion-item>
-            
+                <ion-card>
+                  <ion-item>
+                    <ion-label position="inline">Product : </ion-label>
+                    {{o.product}}
+                  </ion-item>
 
-            
+                  <ion-item>
+                    <ion-label position="inline">Quantity : </ion-label>
+                    {{o.quantity}}
+                  </ion-item>
+
+                  <ion-item>
+                    <ion-label position="inline">Discount : </ion-label>
+                    {{o.discount}}
+                  </ion-item>
+
+                  <ion-item>
+                    <ion-label position="inline">Product Cost : </ion-label>
+                    {{o.pcost}}
+                  </ion-item>
+                </ion-card>
+
               </div>
           </div>
           </span>

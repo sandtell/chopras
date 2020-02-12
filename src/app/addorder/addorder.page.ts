@@ -30,7 +30,8 @@ export class AddorderPage implements OnInit {
         this.fb.group({
           product: ['', Validators.required],
           quantity: ['', Validators.required],
-          discount: ['', Validators.required]
+          discount: ['', Validators.required],
+          pcost: ['', Validators.required]
         }),
       ])
     });
@@ -53,7 +54,8 @@ export class AddorderPage implements OnInit {
     let newUsergroup: FormGroup = this.fb.group({
       product: ['', Validators.required],
       quantity: ['', Validators.required],
-      discount: ['', Validators.required]
+      discount: ['', Validators.required],
+      pcost: ['', Validators.required]
     })
 
     usersArray.insert(arraylen, newUsergroup);
@@ -68,7 +70,7 @@ export class AddorderPage implements OnInit {
 
     for(let z = 0;z <=this.usersForm.controls.users.value.length -1 ;z++ ) {
       // console.log(z);
-      if(this.usersForm.controls.users.value[z].product != "" && this.usersForm.controls.users.value[z].quantity != "" && this.usersForm.controls.users.value[z].discount != "") {
+      if(this.usersForm.controls.users.value[z].product != "" && this.usersForm.controls.users.value[z].quantity != "" && this.usersForm.controls.users.value[z].discount != "" && this.usersForm.controls.users.value[z].pcost != "") {
         // console.log(this.usersForm.controls.users.value);
         await this.modalController.dismiss(this.usersForm.controls.users.value);
       }else {
